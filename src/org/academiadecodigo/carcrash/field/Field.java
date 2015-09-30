@@ -1,32 +1,33 @@
 package org.academiadecodigo.carcrash.field;
 
-import com.googlecode.lanterna.TerminalFacade;
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.screen.ScreenWriter;
-import com.googlecode.lanterna.terminal.Terminal;
 import org.academiadecodigo.carcrash.cars.Car;
+import org.academiadecodigo.simplegraphics.graphics.Color;
+import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 
 public final class Field {
 
-    public static int width;
+    public static int colSize;
+    public static int rowSize;
+    public static int colNumber;
+    public static int rowNumber;
     public static int height;
-
-    // Used to write to screen
-    private static Screen screen;
-
-    // Screen wrapper that preserves default options
-    private static ScreenWriter screenWriter;
+    public static int width;
 
     //This class is not supposed to be instantiated
     private Field() {
     }
+
+    //Gameboard
+    private static Rectangle board;
+
 
     /**
      * Initializes the Screen
      * @param width screen width
      * @param height screen height
      */
-    public static void init(int width, int height) {
+
+    /*public static void init(int width, int height) {
 
         // Create the GUI
         screen = TerminalFacade.createScreen();
@@ -46,34 +47,47 @@ public final class Field {
 
         screen.startScreen();
 
+    }*/
+
+    public static void init(int width, int height, int cols, int rows) {
+
+        board = new Rectangle(0, 0, width, height);
+
+        Field.rowNumber = rows;
+        Field.colNumber = cols;
+        Field.height = height;
+        Field.width = width;
+        Field.colSize = width/cols;
+        Field.rowSize = height/rows;
+
     }
 
-    public static int getWidth() {
-        return width;
+    public static int getColSize() {
+        return colSize;
     }
 
-    public static int getHeight() {
-        return height;
+    public static int getRowSize() {
+        return rowSize;
     }
 
     /**
      * Displays a group of cars in the screen
      * @param cars an array of cars
      */
+
+
     public static void draw(Car[] cars) {
 
-        screen.clear();
-
-        for (Car c : cars) {
-
-            if (!c.isCrashed()) {
-                screenWriter.drawString(c.getPos().getCol(), c.getPos().getRow(), c.toString());
-            }
-
+        board.draw();
+        for (Car car : cars) {
+           car.createRepresentation();
         }
 
-        screen.refresh();
+    }
 
+    public static void changeBoardColor(Color color) {
+        board.setColor(color);
+        board.fill();
     }
 
 }
